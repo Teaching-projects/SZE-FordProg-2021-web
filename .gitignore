@@ -1,0 +1,7 @@
+.vs
+out
+grammar.tab.c
+grammar.tab.h
+a.out
+lex.yy.c
+lexer.txt
