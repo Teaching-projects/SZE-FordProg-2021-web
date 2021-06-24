@@ -13,38 +13,43 @@
 %}
 
 %union{
-    char* name;
+    char* text;
 }
 
-%token<name> TAG
-%token<name> ATTRIBUTE
-%token<name> BOOL_ATTRIBUTE
-%token<name> STYLE_ATTR
+%token<text> START_TAG
+%token<text> END_TAG
+%token<text> END_EMPTY_TAG
 
-%token<name> TAGSIGNS
-%token<name> CONTENT
+%token<text> ATTRIBUTE
+%token<text> BOOL_ATTRIBUTE
+%token<text> STYLE_ATTR
 
-%type<name> expression attribute
+%token<text> TAGSIGNS
+%token<text> CONTENT
+
+%type<text> expression attribute
 
 %%
 
 expressions: expressions expression 
-    |  /* empty */ 
+    | /* empty */ 
     ;
 
-expression: '<' TAG attributes '>' expressions '<' '/' TAG '>'{}
-    | '<' TAG attributes '>' expressions CONTENT expressions '<' '/' TAG '>'{}
-    | '<' TAG attributes '/' '>'{}
-    | '<' '!' '-' '-' CONTENT '-' '-' '>'{};
+expression: START_TAG attributes '>' expressions text expressions END_TAG{}
+    | START_TAG attributes END_EMPTY_TAG{}
+    | '<' '!' '-' '-' text '-' '-' '>'{};
 
 attributes: attribute attributes
-    |  /* empty */ 
+    | /* empty */ 
     ;
 
 attribute: ATTRIBUTE
     | BOOL_ATTRIBUTE
     | STYLE_ATTR
     ;
+
+text: CONTENT text
+    | /* empty */
 
 %%
 
